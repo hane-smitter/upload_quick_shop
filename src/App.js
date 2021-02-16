@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Typography, Container, AppBar } from "@material-ui/core";
 
-function App() {
+import GlobalState from "./contexts/GlobalState";
+import "./App.css";
+import { Pages } from "./pages/";
+
+const App = () => {
+  const [globState, setGlobState] = useState({
+    image: '',
+    category: '',
+    brand: '',
+    description: ''
+});
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <GlobalState.Provider value={[globState, setGlobState]}>
+        <Container maxwidth="lg">
+          <AppBar position="static" color="inherit">
+            <Typography variant="h4" align="center">
+              Find An Item
+            </Typography>
+          </AppBar>
+
+          <Pages />
+        </Container>
+      </GlobalState.Provider>
     </div>
   );
-}
+};
 
 export default App;
