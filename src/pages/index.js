@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Form, Formik, FormikConfig, FormikValues, Field } from "formik";
 import { TextField } from "formik-material-ui";
+import axios from 'axios';
 import * as yup from "yup";
 import {
   Button,
@@ -234,7 +235,7 @@ function FormikStepper({ children, ...props }) {
             url: 'https://quickshop.co.ke'/* enter url to post data to */,
             data: val
           })
-          .then(respone => {
+          .then((response) => {
             console.log(response);
           })
           .catch(error => {
