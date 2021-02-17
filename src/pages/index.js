@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
-import { Form, Formik, FormikConfig, FormikValues, Field } from "formik";
-import { TextField } from "formik-material-ui";
-import axios from 'axios';
+import { Form, Formik, Field } from "formik";
+import { TextField, Select } from "formik-material-ui";
+import { FormHelperText, FormControl, InputLabel } from "@material-ui/core";
+import axios from "axios";
 import * as yup from "yup";
 import {
   Button,
@@ -18,6 +19,7 @@ import {
 import GlobalState from "../contexts/GlobalState";
 import FileInput from "./Upload.js";
 import useStyles from "./Styles.js";
+import States from "./States";
 
 const Pages = () => {
   const classes = useStyles();
@@ -25,7 +27,7 @@ const Pages = () => {
   return (
     <Container>
       <Grid container spacing={4} justify="center" alignItems="center">
-        <FormikStepper onSubmit={() => {}}>
+        <FormikStepper>
           {/* {console.log("global context state")}
           {console.log(globState)} */}
           {/* STEP 1 */}
@@ -68,48 +70,21 @@ const Pages = () => {
             <FormStep>
               <Box paddingBottom={2}>
                 <Field
-                  name="category"
+                  name="condition"
                   select
                   component={TextField}
-                  label="Category"
-                  value={globState.category}
+                  label="condition"
+                  value={globState.condition}
                   onChange={(e) =>
                     setGlobState((globState) => ({
                       ...globState,
-                      category: e.target.value,
+                      condition: e.target.value,
                     }))
                   }
                 >
-                  <MenuItem value="Electronics">Electronics</MenuItem>
-                  <MenuItem value="Home Appliances">Home Appliances</MenuItem>
-                  <MenuItem value="Computers">Computers</MenuItem>
-                  <MenuItem value="Smartphones">Smartphones</MenuItem>
-                  <MenuItem value="Tools and Equipments">
-                    Tools and Equipments
-                  </MenuItem>
-                  <MenuItem value="Health and Beauty">
-                    Health and Beauty
-                  </MenuItem>
-                  <MenuItem value="Agriculture and Food">
-                    Agriculture and Food
-                  </MenuItem>
-                  <MenuItem value="Jobs">Jobs</MenuItem>
-                  <MenuItem value="Commercial Equipments And Tools">
-                    Commercial Equipments And Tools
-                  </MenuItem>
-                  <MenuItem value="Home, Furniture and Appliances">
-                    Home, Furniture and Appliances
-                  </MenuItem>
-                  <MenuItem value="Sports, Arts and Outdoors">
-                    Sports, Arts and Outdoors
-                  </MenuItem>
-                  <MenuItem value="Fashion">Fashion</MenuItem>
-                  <MenuItem value="Repair and Construction">
-                    Repair and Construction
-                  </MenuItem>
-                  <MenuItem value="Mobile Phones and Tablets">
-                    Mobile Phones and Tablets
-                  </MenuItem>
+                  <MenuItem value="New">New</MenuItem>
+                  <MenuItem value="Used">Used</MenuItem>
+                  <MenuItem value="Any">Any</MenuItem>
                 </Field>
               </Box>
               <Box paddingBottom={2}>
@@ -140,13 +115,13 @@ const Pages = () => {
             <FormStep
               validationSchema={yup.object().shape({
                 name: yup.string().required("please Enter your name"),
-                phone: yup.number(),
+                phone: yup.number("Provide a number only"),
                 email: yup
                   .string()
                   .email("Invalid email")
                   .required("Please enter your email"),
                 address: yup.string().required("We need your delivery address"),
-                town: yup.string().required("Please enter your town"),
+                city: yup.string().required("Please enter your town"),
               })}
             >
               <Box paddingBottom={2}>
@@ -175,19 +150,18 @@ const Pages = () => {
                   label="E-mail address"
                 />
               </Box>
+
+              <Box paddingBottom={2}>
+                <Field name="city" component={TextField} label="Town / City" />
+                <FormHelperText>City or Town</FormHelperText>
+              </Box>
+
               <Box paddingBottom={2}>
                 <Field
                   name="address"
-                  placeholder="House number and street name"
+                  placeholder="Hse no. and street name"
                   component={TextField}
                   label="Delivery Address"
-                />
-              </Box>
-              <Box paddingBottom={2}>
-                <Field
-                  name="town"
-                  component={TextField}
-                  label="Town / City"
                 />
               </Box>
             </FormStep>
@@ -217,7 +191,7 @@ function FormikStepper({ children, ...props }) {
       {...props}
       initialValues={{
         image: "",
-        category: "",
+        condition: "",
         brand: "",
         description: "",
         name: "",
@@ -225,22 +199,37 @@ function FormikStepper({ children, ...props }) {
         email: "",
         address: "",
         town: "",
+        city: "",
       }}
       validationSchema={currentChild.props.children.props.validationSchema}
       onSubmit={async (val, helpers) => {
         Object.assign(val, globState);
         if (isLastStep()) {
+          // uploading image
+          const formData = new FormData();
+          formData.append("myFile", val.image, val.image.name);
+
+          // Details of the uploaded file
+          console.log(formData);
+
+          //backend api to upload image
+          await axios.post("api/uploadfile", formData);
+
+          delete val.image;
+          console.log("val");
+          console.log(val);
+
           await axios({
-            method: 'post',
-            url: 'https://quickshop.co.ke'/* enter url to post data to */,
-            data: val
+            method: "post",
+            url: "https://quickshop.co.ke" /* enter url to post data to */,
+            data: val,
           })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch(error => {
-            console.log(error);
-          });
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         } else {
           setStep((_) => ++_);
         }

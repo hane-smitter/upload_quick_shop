@@ -8,7 +8,7 @@ import { Pages } from "./pages/";
 const App = () => {
   const [globState, setGlobState] = useState({
     image: '',
-    category: '',
+    condition: '',
     brand: '',
     description: ''
 });
