@@ -19,7 +19,7 @@ import {
 import GlobalState from "../contexts/GlobalState";
 import FileInput from "./Upload.js";
 import useStyles from "./Styles.js";
-import States from "./States";
+import Thumb from "./imgPrev/Thumb";
 
 const Pages = () => {
   const classes = useStyles();
@@ -28,8 +28,8 @@ const Pages = () => {
     <Container>
       <Grid container spacing={4} justify="center" alignItems="center">
         <FormikStepper>
-          {/* {console.log("global context state")}
-          {console.log(globState)} */}
+          {console.log("global context state")}
+          {console.log(globState)}
           {/* STEP 1 */}
           <Card
             label="product desciption"
@@ -39,6 +39,7 @@ const Pages = () => {
             <FormStep>
               <Box paddingBottom={2}>
                 <FileInput />
+                <Thumb file={globState.image} />
               </Box>
               <Box paddingBottom={2}>
                 <Field

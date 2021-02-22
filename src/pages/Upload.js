@@ -6,7 +6,7 @@ const FileInput = () => {
     const [state, setState] = useContext(GlobalState);
     
   return (
-    <input id="file" name="file" type="file" onChange={(event) => {
+    <input id="file" accept='image/*' name="file" type="file" onChange={(event) => {
       setState(state => ({...state, image: event.currentTarget.files[0]}) )
     }} />
   );
