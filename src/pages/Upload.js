@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import GlobalState from '../contexts/GlobalState';
 
 const FileInput = () => {
-    const [state, setState] = useContext(GlobalState);
+  const [globState, setGlobState] = useContext(GlobalState);
     
   return (
-    <input id="file" accept='image/*' name="file" type="file" onChange={(event) => {
-      setState(state => ({...state, image: event.currentTarget.files[0]}) )
-    }} />
+    <input id="file" accept='image/*' name="file" formEncType="multipart/form-data" type="file" onChange={(event) => {
+      setGlobState({...globState, image: event.currentTarget.files[0]} )
+    }}/>
   );
 };
 

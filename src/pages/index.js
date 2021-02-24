@@ -24,12 +24,12 @@ import Thumb from "./imgPrev/Thumb";
 const Pages = () => {
   const classes = useStyles();
   const [globState, setGlobState] = useContext(GlobalState);
+  
   return (
     <Container>
       <Grid container spacing={4} justify="center" alignItems="center">
         <FormikStepper>
-          {console.log("global context state")}
-          {console.log(globState)}
+          
           {/* STEP 1 */}
           <Card
             label="product desciption"
@@ -178,7 +178,9 @@ export function FormStep({ children }) {
 }
 
 function FormikStepper({ children, ...props }) {
-  const [globState, setGlobState] = useContext(GlobalState);
+
+  const [globState] = useContext(GlobalState);
+
   const childrenArray = React.Children.toArray(children);
   const [step, setStep] = useState(0);
   const currentChild = childrenArray[step];
@@ -204,8 +206,8 @@ function FormikStepper({ children, ...props }) {
       }}
       validationSchema={currentChild.props.children.props.validationSchema}
       onSubmit={async (val, helpers) => {
-        Object.assign(val, globState);
         if (isLastStep()) {
+          // Object.assign(val, globState);
           // uploading image
           const formData = new FormData();
           formData.append("myFile", val.image, val.image.name);
